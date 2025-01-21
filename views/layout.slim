@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    title Bokshop
+    link rel="stylesheet" href="/style.css"
+  body
+    header
+      h1 Bokshop
+      nav
+        a href="/" Hem
+        a href="/books" Se alla böcker
+        a href="/cart" Kundvagn
+    main
+      == yield

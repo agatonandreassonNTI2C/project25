@@ -1,0 +1,7 @@
+h2 = @book['title']
+p Författare: = @book['author']
+p Pris: #{'%.2f' % @book['price']} kr
+p Beskrivning: = @book['description']
+form action="/cart/add/#{@book['id']}" method="post"
+  button type="submit" class="btn" Lägg till i kundvagn
+a href="/books" class="btn" Tillbaka till böcker
