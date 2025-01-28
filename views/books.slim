@@ -1,19 +1,20 @@
 h2 Våra böcker
 
 
-form action="login" method="post"
-  input name="Buy" placeholder="Buy?" type="text"/
-  input type="submit" value="submit"
-  
 
-<img src="img/book1.png" alt="book">
+ul 
+    - @result.each do |book|
 
-h2 = "title:"
-h3 = @book[:title]
+        h3 = book["id"]
 
-h2 = "author:"
-h3 = @book[:author]
+        h2 = "title:"
+        h3 = book["title"]
 
-h2 = "price:"
-h3 = @book[:price]
+        h2 = "author:"
+        h3 = book["author"]
 
+        h2 = "year of release:"
+        h3 = book["year"]
+
+        form action="buy" method="post"
+          input type="submit" value="Buy?"
