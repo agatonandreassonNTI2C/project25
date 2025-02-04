@@ -1,0 +1,19 @@
+h2 Din kundvagn
+
+- if @library.items.any?
+  ul 
+      - @library.each do |book|
+
+          h3 = book["id"]
+
+          h2 = "title:"
+          h3 = book["title"]
+
+          h2 = "author:"
+          h3 = book["author"]
+
+          h2 = "year of release:"
+          h3 = book["year"]
+
+          form action="delete" method="post"
+            input type="submit" value="Delete?"

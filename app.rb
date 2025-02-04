@@ -27,21 +27,40 @@ get('/books') do
     slim (:books)
 end
 
-post('/buy') do
+post('/loan') do
 
     username = params[:username]
     password = params[:password]
-    db = SQLite3::Database.new('db/todo_2021.db')
+    db = SQLite3::Database.new('db/user.db')
     db.results_as_hash = true
     result = db.execute("SELECT * FROM users WHERE username = ?",username).first
     pwdigest = result["pwdigest"]
     id = result["id"]
 
-get('/cart') do
-    @cart = params[:cart]
-    slim :cart
+
+
+#    if result.empty?
+#        if password==pwdigest
+#            pwd_digest=BCrypt::Password.create(password)
+#            db.execute(”INSERT INTO users(username,pwdigest) VALUES(?,?)”,username,pwdigest)
+#            redirect(’/welcome’)
+#        else
+#            redirect(’/error’) #Lösenord matchar ej
+#        end
+#    end
+
+end
+
+get('/library') do
+    @library = params[:library]
+    slim :library
 end
 
 get('/rate') do
     slim :rate
+end
+
+post('/delete') do
+    
+
 end
