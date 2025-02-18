@@ -7,10 +7,11 @@ html
     header
       h1 Bokshop
       nav
-        a href="/" Hem
-        a href="/books" Se alla böcker
-        a href="/cart" Kundvagn
-        a href="/showlogin" Login
+        ul id="ul"
+          a href="/" Hem
+          a href="/books" Se alla böcker
+          a href="/library" Kundvagn
+          a href="/showlogin" Login
 
     main
       == yield

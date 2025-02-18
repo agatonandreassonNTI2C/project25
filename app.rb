@@ -52,7 +52,14 @@ post('/loan') do
 end
 
 get('/library') do
-    @library = params[:library]
+
+    db = SQLite3::Database.new('db/books.db')
+    db.results_as_hash = true
+
+    @library = db.execute("SELECT * FROM books")
+
+
+
     slim :library
 end
 

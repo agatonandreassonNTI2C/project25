@@ -37,4 +37,9 @@ body {
   .btn:hover {
     background: #0056b3;
   }
-  
+
+  #ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
