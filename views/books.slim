@@ -15,6 +15,13 @@ ul
 
         h2 = "year of release:"
         h3 = book["year"]
-
-        form action="loan" method="post"
-          input type="submit" value="#{book["id"]}"
+        h4 test
+        h4 = @loans
+        
+        a = 0
+        - @loans.each do |loan|
+          - if loan["bookid"] == book["id"]
+            a = 1
+        - if a == book["id"]
+          form action="loan" method="post"
+            input type="submit" name="bookid" value="#{book["id"]}"
