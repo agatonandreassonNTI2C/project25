@@ -1,18 +1,30 @@
 h2 Dina böcker
 
 
-  - @library.each do |book|
 
-      h3 = book["id"]
 
-      h2 = "title:"
-      h3 = book["title"]
+ul
+  - userloans.each do |book|
+    h2 = "title:"
 
-      h2 = "author:"
-      h3 = book["author"]
+    h3 = "title: #{book["title"]}"
 
-      h2 = "year of release:"
-      h3 = book["year"]
+    h2 = "author:"
+            
+    p = book["author"]
 
-      form action="delete" method="post"
-        input type="submit" value="Delete?"
+    h2 = "year of release:"
+    h3 = book["year"]
+
+    form action="delete" method="post"
+      input type="submit" value="Delete?"
+      
+         
+            h2 = "author:"
+            h3 = book["author"]
+
+            h2 = "year of release:"
+            
+
+
+            

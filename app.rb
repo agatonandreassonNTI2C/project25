@@ -25,22 +25,7 @@ get('/books') do
     #db = SQLite3::Database.new('db/library.db')
     #db.results_as_hash = true
 
-    @results = db.execute("SELECT * FROM books")
-    @loans = db.execute("SELECT bookid FROM loan WHERE userid = ?", id)
-    
-    @finalresult = {}
-    bookexist = false
-    for result in @results do
-        puts result
-        for loan in @loans do
-            puts loan
-            if result["id"] == loan["bookid"]
-                bookexist = true
-            end
-        end
-
-        @finalresult.merge(@result)
-    end
+    @result = db.execute("SELECT * FROM books")
 
     slim (:books)
 end
@@ -81,6 +66,7 @@ post('/login') do
   
     if BCrypt::Password.new(pwdigest) == password
       session[:id] = id
+      session[:username] = username
       redirect('/home')
     else
       "FEL LÖSEN"
@@ -95,7 +81,7 @@ post('/loan') do
     username = params[:username]
     password = params[:password]
     bookid = params[:bookid]
-    username = "Agaton.Andreasson@gmail.com"
+    username = "Agaton"
     userinfo = db.execute("SELECT * FROM users WHERE username = ?",username).first
     #pwdigest = result["pwdigest"]
     puts "bookid"
@@ -112,11 +98,7 @@ post('/loan') do
     #    else
     #        redirect(’/error’) #Lösenord matchar ej
     #    end
-    begin
-        db.execute("INSERT INTO loan (bookid, userid) VALUES (?, ?)", [bookid, id])
-    rescue Exception
-        puts "hej"
-    end
+    db.execute("INSERT INTO loan (bookid, userid) VALUES (?, ?)", [bookid, id])
     
    end
 
@@ -126,14 +108,20 @@ end
 
 get('/library') do
 
+    
+
     db = SQLite3::Database.new('db/library.db')
     db.results_as_hash = true
 
-    @library = db.execute("SELECT * FROM books")
+    name = session[:username]
 
+    userloans = db.execute("SELECT * FROM books WHERE id IN (SELECT bookid FROM loan WHERE userid = #{session[:id]})")
+    puts userloans
 
+    # loantable = db.execute("SELECT * FROM loan")
 
-    slim :library
+    users = db.execute("SELECT * FROM users")
+    slim :library, locals:{users:users, userloans:userloans}
 end
 
 get('/rate') do

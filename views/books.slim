@@ -18,10 +18,6 @@ ul
         h4 test
         h4 = @loans
         
-        a = 0
-        - @loans.each do |loan|
-          - if loan["bookid"] == book["id"]
-            a = 1
-        - if a == book["id"]
-          form action="loan" method="post"
-            input type="submit" name="bookid" value="#{book["id"]}"
+
+        form action="loan" method="post"
+          input type="submit" name="bookid" value="#{book["id"]}"
