@@ -129,6 +129,13 @@ get('/rate') do
 end
 
 post('/delete') do
+
+    puts "userid"
+    puts "#{session[:id]}"
+    puts "bookid"
+    puts "#{params[:bookid]}"
     
+    db.execute("DELETE FROM loan WHERE (userid = ?, #{session[:id]}") #and bookid = #{params[:bookid]})")
+    redirect('/library')
 
 end

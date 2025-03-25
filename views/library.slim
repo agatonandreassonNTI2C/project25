@@ -5,26 +5,17 @@ h2 Dina böcker
 
 ul
   - userloans.each do |book|
-    h2 = "title:"
+    h2 = "Book:"
+    h4 = book["id"]
 
-    h3 = "title: #{book["title"]}"
+    h2 = "title:"
+    h4 = book["title"]
 
     h2 = "author:"
-            
-    p = book["author"]
+    h4 = book["author"]
 
     h2 = "year of release:"
-    h3 = book["year"]
+    h4 = book["year"]
 
     form action="delete" method="post"
       input type="submit" value="Delete?"
-      
-         
-            h2 = "author:"
-            h3 = book["author"]
-
-            h2 = "year of release:"
-            
-
-
-            
