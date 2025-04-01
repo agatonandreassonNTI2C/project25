@@ -27,6 +27,18 @@ get('/books') do
 
     @result = db.execute("SELECT * FROM books")
 
+    puts "session id"
+    puts session[:id]
+
+    id = session[:id]
+
+    puts id
+
+    if id == 11 then
+      id = 11
+    else
+      id = 0
+    end
     slim :books, locals:{id:id}
 end
 
