@@ -27,7 +27,7 @@ get('/books') do
 
     @result = db.execute("SELECT * FROM books")
 
-    slim (:books)
+    slim :books, locals:{id:id}
 end
 
 post('/register') do
@@ -133,9 +133,9 @@ post('/delete') do
     puts "userid"
     puts "#{session[:id]}"
     puts "bookid"
-    puts "#{params[:bookid]}"
-    
-    db.execute("DELETE FROM loan WHERE (userid = ?, #{session[:id]}") #and bookid = #{params[:bookid]})")
-    redirect('/library')
+    puts "#{params[:bookId]}"
 
+
+    db.execute("DELETE FROM loan WHERE userid = ? and bookid = ?", [session[:id], params[:bookId]]) 
+    redirect('/library')
 end

@@ -18,4 +18,5 @@ ul
     h4 = book["year"]
 
     form action="delete" method="post"
+      input type="hidden" name="bookId" value=book["id"]
       input type="submit" value="Delete?"

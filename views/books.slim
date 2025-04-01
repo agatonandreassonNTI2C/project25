@@ -15,9 +15,13 @@ ul
 
         h2 = "year of release:"
         h3 = book["year"]
-        h4 test
-        h4 = @loans
         
 
         form action="loan" method="post"
-          input type="submit" name="bookid" value="#{book["id"]}"
+          input type="submit" name="bookid" value="loan?"
+
+
+        - if id == 11
+
+          form action="bookDelete" method="post"
+          input type="submit" name="bookDelete" value="delete?"
