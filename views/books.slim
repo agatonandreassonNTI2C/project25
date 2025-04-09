@@ -18,10 +18,12 @@ ul
         
 
         form action="loan" method="post"
-          input type="submit" name="bookid" value="loan?"
+          input type="hidden" name="bookid" value=book['id']
+          input type="submit" name="submit" value="loan?"
 
 
         - if id == 11
 
-          form action="bookDelete" method="post"
-          input type="submit" name="bookDelete" value="delete?"
+          form action="books/delete" method="post"
+            input type="hidden" name="bookid" value=book['id']
+            input type="submit" name="submit" value="delete?"

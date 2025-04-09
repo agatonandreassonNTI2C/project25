@@ -3,48 +3,67 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'sqlite3'
 require 'bcrypt'
+require 'sinatra/flash'
+
+require_relative 'model/model.rb'
+also_reload 'model/model.rb'
 
 
 
 enable :sessions
+
+
+
+
 db = SQLite3::Database.new('db/library.db')
 db.results_as_hash = true
 id = 0
+
+
+# Visar home.slim
 
 get('/') do
   slim(:home)
 end
 
+# Visar home.slim
+
 get('/home') do
     slim (:home)
 end
 
+# Visar books.slim och alla böcker i public biblioteket
+#Hämtar böckerna från book tabellen i databasen
+#Skicka localId för att hålla koll på adminanvändaren
+
 get('/books') do   
 
-
-    #db = SQLite3::Database.new('db/library.db')
-    #db.results_as_hash = true
-
-    @result = db.execute("SELECT * FROM books")
+    @result = get_all_books()
 
     puts "session id"
     puts session[:id]
 
-    id = session[:id]
+    localId = session[:id]
 
     puts id
 
-    if id == 11 then
-      id = 11
+    if localId == 11 then
+      localId = 11
     else
-      id = 0
+      localId = 0
     end
-    slim :books, locals:{id:id}
+    slim :books, locals:{id:localId}
 end
+
+#Visar slim sidan där användare kan registrera sig
 
 post('/register') do
     slim(:register)
 end
+
+#Håller koll på logik för om användare kan registrera sig
+#Skapar en ny användare
+#Sparar användarnamn och password_digest i users tabellen i databasen
 
 post('/users/new') do
     username = params[:username]
@@ -54,39 +73,45 @@ post('/users/new') do
     if (password == password_confirm)
   
       password_digest = BCrypt::Password.create(password)
-      db = SQLite3::Database.new('db/library.db')
-      db.execute('INSERT INTO users (username,pwdigest) VALUES (?,?)',[username,password_digest])
+      create_user(username,password_digest)
       redirect('/')
   
     else
-      "Lösenord mathcade inte"
+      redirect('/')
     end
 end
+
+#Visar inloggningssidan
   
 get('/showlogin') do
     slim(:login)
 end
+
+#Hanterar logik för om anävndare kan logga in
+#Jämför lösenord från users tabellen i databasen
   
 post('/login') do
     username = params[:username]
     password = params[:password]
-    db = SQLite3::Database.new('db/library.db')
-    db.results_as_hash = true
-    result = db.execute("SELECT * FROM users WHERE username = ?",username).first
-    pwdigest = result["pwdigest"]
-    id = result["id"]
+    user = get_user_by_username(username)
+    pwdigest = user["pwdigest"]
+    id = user["id"]
+
+    
   
     if BCrypt::Password.new(pwdigest) == password
       session[:id] = id
       session[:username] = username
       redirect('/home')
     else
-      "FEL LÖSEN"
+      flash[:password_error] = "Fel Lösenord."
     end
   
 end
 
-
+#Logik för användare som trycker på knappen för att låna böcker
+#Tar information från users och books tabellerna till loan tabellen.
+#
 
 post('/loan') do
 
@@ -94,8 +119,8 @@ post('/loan') do
     password = params[:password]
     bookid = params[:bookid]
     username = "Agaton"
-    userinfo = db.execute("SELECT * FROM users WHERE username = ?",username).first
-    #pwdigest = result["pwdigest"]
+    userinfo = get_user_by_username(username)
+    id = session[:id]
     puts "bookid"
     puts bookid
     puts "userid"
@@ -103,20 +128,15 @@ post('/loan') do
 
 
    if (id > 0) 
-    #    if password==pwdigest
-    #        pwd_digest=BCrypt::Password.create(password)
-    #        db.execute(”INSERT INTO users(username,pwdigest) VALUES(?,?)”,username,pwdigest)
-    #        redirect(’/welcome’)
-    #    else
-    #        redirect(’/error’) #Lösenord matchar ej
-    #    end
-    db.execute("INSERT INTO loan (bookid, userid) VALUES (?, ?)", [bookid, id])
-    
+    create_user_book(bookid, id)    
    end
 
    redirect('/books')
 
 end
+
+#Visar användares personliga bibliotek
+#Hanterar lånade böcker från loan tabellen och skriver ut följande böcker från book tabellen
 
 get('/library') do
 
@@ -127,18 +147,15 @@ get('/library') do
 
     name = session[:username]
 
-    userloans = db.execute("SELECT * FROM books WHERE id IN (SELECT bookid FROM loan WHERE userid = #{session[:id]})")
+    userloans = get_user_books(session[:id]) 
     puts userloans
-
-    # loantable = db.execute("SELECT * FROM loan")
 
     users = db.execute("SELECT * FROM users")
     slim :library, locals:{users:users, userloans:userloans}
 end
 
-get('/rate') do
-    slim :rate
-end
+#Logik för en delete knapp i användares personliga bibliotek. 
+#Tar bort rader från loan tabellen
 
 post('/delete') do
 
@@ -148,6 +165,24 @@ post('/delete') do
     puts "#{params[:bookId]}"
 
 
-    db.execute("DELETE FROM loan WHERE userid = ? and bookid = ?", [session[:id], params[:bookId]]) 
+    delete_user_book(session[:id], params[:bookId])  
     redirect('/library')
+end
+
+#Skapar en delete knapp för admin användaren i public biblioteket
+#Tar bort böcker från book tabellen
+
+
+post('/books/delete') do
+
+  puts "userid"
+  puts "#{session[:id]}"
+  puts "bookid"
+  puts "#{params[:bookid]}"
+
+  delete_book(params[:bookid])
+
+
+  redirect('/books')
+
 end
