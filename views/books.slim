@@ -5,15 +5,13 @@ h2 Våra böcker
 ul 
     - @result.each do |book|
 
-        h3 = book["id"]
-
-        h2 = "title:"
+        h2 = "Title:"
         h3 = book["title"]
 
-        h2 = "author:"
+        h2 = "Author:"
         h3 = book["author"]
 
-        h2 = "year of release:"
+        h2 = "Year of release:"
         h3 = book["year"]
         
 
