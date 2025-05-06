@@ -1,0 +1,46 @@
+h2 Våra böcker
+
+- if flash[:index_error]
+  p = flash[:index_error]
+
+
+
+- if id == 11
+  form action="/addbook" method="post"
+    input type="text" name="title" placeholder="Enter title"
+    input type="text" name="author" placeholder="Enter author"
+    input type="text" name="year" placeholder="Enter year of release"
+    input type="submit" value="Add book?"
+
+ul 
+    - @result.each do |book|
+
+        h2 = "Title:"
+        h3 = book["title"]
+
+        h2 = "Author:"
+        h3 = book["author"]
+
+        h2 = "Year of release:"
+        h3 = book["year"]
+
+        
+        
+
+        form action="loan" method="post"
+          input type="hidden" name="bookid" value=book['id']
+          input type="submit" name="submit" value="loan?"
+
+
+        - if id == 11
+
+          form action="bookdelete" method="post"
+            input type="hidden" name="bookid" value=book['id']
+            input type="submit" name="submit" value="delete?"
+
+          form action="adminedit" method="post"
+            input type="hidden" name="bookid" value=book['id']
+            input type="text" name="title" placeholder="Enter new title"
+            input type="submit" name="submit" value="edit?"
+
+          

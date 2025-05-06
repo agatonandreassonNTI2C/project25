@@ -1,0 +1,17 @@
+h2 Alla användare
+
+- if flash[:user_error]
+    p = flash[:user_error]
+
+- users.each do |user|
+
+    p Id: #{user["id"]}
+
+
+    p Användarnamn: #{user["username"]}
+
+    - if session["id"] == 11
+
+        form action="/userdelete" method="post"
+            input type="hidden" name="userid" value=user['id']
+            input type="submit" value="Delete user?"

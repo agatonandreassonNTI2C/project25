@@ -1,22 +1,22 @@
-h2 Dina böcker
+h2 Alla lånade böcker
 
-
+- if flash[:library_error]
+  p = flash[:library_error]
 
 
 ul
   - userloans.each do |book|
-    h2 = "Book:"
-    h4 = book["id"]
 
-    h2 = "title:"
-    h4 = book["title"]
+    li
+  
+      h1 Lånad av användare: #{book["username"]}
+      p Title: #{book["title"]}
+      p Author: #{book["author"]}
+      p Year of release: #{book["year"]}
 
-    h2 = "author:"
-    h4 = book["author"]
 
-    h2 = "year of release:"
-    h4 = book["year"]
+    - if book["userid"] == currentUserId
 
-    form action="delete" method="post"
-      input type="hidden" name="bookId" value=book["id"]
-      input type="submit" value="Delete?"
+      form action="/delete" method="post"
+        input type="hidden" name="bookId" value=book['bookid']
+        input type="submit" value="Delete?"

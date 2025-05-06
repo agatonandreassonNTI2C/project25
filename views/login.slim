@@ -4,9 +4,12 @@ form action="login" method="POST"
     input type="submit" value="Logga in tack"
 - if flash[:login_error]
     p = flash[:login_error]
-- if flash[:password_error]
-    p = flash[:password_error]
+
 
 
 Form action="register" method="POST"
     input type="submit" value="Registrera dig"
+
+
+Form action="logout" method="POST"
+    input type="submit" value="Logga ut"
